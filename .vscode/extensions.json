@@ -1,0 +1,12 @@
+// HEADER-START
+// Path: .vscode/extensions.json
+// HEADER-END
+{
+  "recommendations": [
+    "bisquit.vscode-ts-rename-all",
+    "yoavbls.pretty-ts-errors",
+    "esbenp.prettier-vscode",
+    "emeraldwalk.runonsave",
+    "teabyii.ayu"
+  ]
+}

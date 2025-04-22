@@ -1,0 +1,271 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+**Cursor Rule: React TS + MUI + Yarn Project (Refined)**
+
+**I. Environment and Tools**
+
+* **Terminal:** Use PowerShell on Windows.
+* **Package Manager:** Use Yarn exclusively (`yarn add`, `yarn dev`, etc.).
+* **Editor/IDE:** Configure your editor for TypeScript and ESLint integration (e.g., VS Code with the ESLint extension).
+
+**II. Core Principles**
+
+* **TypeScript Strict Mode:** Enable and maintain TypeScript's strict mode. This includes:
+    * `strict: true` in `tsconfig.json`
+    * Specifically: `noImplicitAny`, `noImplicitThis`, `strictNullChecks`, `strictFunctionTypes`, `strictBindCallApply`, `noImplicitReturns`, `noFallthroughCasesInSwitch`, and `forceConsistentCasingInFileNames`.
+* **Strong Typing:**
+    * Type all components (props, state), context values, API responses, etc.
+    * Use TypeScript's utility types (`Partial`, `Readonly`, `Pick`, `Omit`, etc.) to enhance type safety.
+    * Define custom types and interfaces in `.d.ts` files (e.g., `src/types.d.ts`) or within the component file if only used there.
+* **Separation of Concerns:**
+    * Divide the application into logical modules (e.g., features, UI components, services).
+    * Follow a clear directory structure (as you have started).
+    * Isolate UI logic from business logic.
+    * Keep components small and focused.
+* **Performance Optimization:**
+    * Use React.memo for components that render the same output given the same props.
+    * Virtualize large lists (e.g., using `react-window` as in your `package.json`) to improve rendering performance.
+    * Lazy-load components where appropriate (React.lazy).
+    * Optimize images (e.g., using WebP format, responsive images).
+* **Error Handling:**
+    * Use `ErrorBoundary` for handling runtime errors, especially in production.
+    * Handle API errors gracefully.
+    * Provide informative error messages to the user.
+* **Testing:**
+    * Write unit tests for components and utility functions.
+    * Use `@testing-library/react` for component testing.
+    * Aim for high test coverage.
+    * Follow testing best practices (e.g., AAA pattern: Arrange, Act, Assert).
+
+**III. Project Structure and Architecture**
+
+* **Directory Structure:** Maintain a clear and consistent directory structure (as provided). Consider these refinements:
+    * `src/features`: Organize feature-specific code (e.g., `src/features/dashboard`, `src/features/user-profile`). Each feature directory can have its own components, contexts, hooks, and services.
+    * `src/services`: Place API calls and data fetching logic here.
+    * `src/models` or `src/types`: Consistently use one for data types/interfaces.
+    * `src/utils`: Keep utility functions here.
+    * `src/assets`: For static assets (images, etc.).
+* **Component Architecture:**
+    * **Presentational Components:** (Dumb components) Receive data and callbacks via props and focus on rendering UI.
+    * **Container Components:** (Smart components) Fetch data, manage state, and pass data and callbacks to presentational components. (Can be achieved with hooks and context too)
+    * **Hooks:** Extract reusable logic into custom hooks (e.g., `useFetchData`, `useForm`).
+* **Data Management:**
+    * **Context API:** Use React Context for sharing state that is global to a component tree (as you are doing).
+        * Context logic should be encapsulated within the provider.
+        * Create custom hooks to consume context values (e.g., `useLanguageContext`).
+        * Structure contexts by domain (e.g., `UserContext`, `ThemeContext`).
+    * **Local Storage:** Use `localStorageUtils.ts` for any local storage interactions.
+        * Consider its limitations (synchronous, limited storage).
+        * If necessary, explore state management libraries (e.g., Zustand, Recoil) for more complex state management, but avoid them unless truly needed.
+
+**IV. Coding Standards**
+
+* **React and TypeScript:**
+    * Use functional components with hooks.
+    * Avoid class components.
+    * Type component props and state.
+    * Destructure props.
+    * Use the `React.FC` type for functional components where appropriate.
+    * Use `<>` (React.Fragment shorthand) instead of `<React.Fragment>`.
+* **MUI:**
+    * Use MUI components for UI elements.
+    * Customize styles using the `sx` prop.
+    * Do not use inline styles (`style={}`).
+    * Leverage MUI's theming capabilities (`useTheme`, `createTheme`).
+* **Routing:**
+    * Use `react-router-dom` (as you are).
+    * Use `HashRouter` as specified.
+    * Define routes in `App.tsx` using `<Routes>` and `<Route>`.
+    * Implement navigation using `<Link>` or `useNavigate`.
+* **Styling:**
+    * Use absolute import paths (`@/components/...`). Configure this in `tsconfig.json` and your bundler (Vite).
+    * Global styles in `app/globals.css`.
+    * Modular CSS or CSS-in-JS (MUI's `sx`) for component-specific styles.
+* **Naming Conventions:**
+    * Components: PascalCase (e.g., `MyComponent`).
+    * Files: kebab-case (e.g., `my-component.tsx`).
+    * Variables/Functions: camelCase (e.g., `myVariable`, `myFunction`).
+    * Interfaces/Types: PascalCase (e.g., `MyInterface`, `MyType`).
+    * Constants: UPPER_SNAKE_CASE (e.g., `API_URL`).
+
+**V. Specific Rules from Your Document (Enhanced)**
+
+* **Context:**
+    * All context logic in `components/context/`.
+    * Export typed context, custom hook, and provider.
+    * Follow patterns in `CustomThemeProvider.tsx` and `LanguageContext.tsx`.
+    * Context providers wrap the app in `main.tsx`.
+    * **Crucially:** Context providers are the *source of truth* for their data and logic. Components using the context *consume* the API, they don't modify or reimplement the logic.
+* **Router and Error Handling:**
+    * `<HashRouter>` as root.
+    * `<StrictMode>` in development, `<ErrorBoundary>` in production.
+    * Theme from `useTheme()` and respect dynamic theming.
+* **Layout:**
+    * Fixed `AppBar` and responsive `<Box component="main">`.
+    * Routes in `App.tsx` with `<Routes>` and `<Route>`.
+    * `/home` route with background image and overlaid `Page` component.
+    * UI controls (e.g., `DarkModeToggle`, `LanguageSelector`) in top-right of `AppBar`.
+* **Fonts:**
+    * Fonts in `/public/fonts` and `/src/app/fonts`, use `@font-face` and theme overrides.
+* **LocalStorage:**
+    * `localStorageUtils.ts` for local storage logic.
+* **Home Component:**
+    * Fixed layout with background image in `Box`.
+    * Responsive design with viewport units (`vw`, `vh`) and `Box` flex.
+* **Testing:**
+    * Jest setup via `jest.config.js` and `jest.setup.ts`.
+* **Component Separation:**
+    * Logic split across components (e.g., `Manager`, `Page`, `UI`).
+* **tsconfig.node.json:**
+    * `moduleResolution: "Bundler"`, `target: "ES2022"`, and strict lint rules.
+
+**VI. Additional Best Practices**
+
+* **API Communication:**
+    * Use a consistent approach for API calls (e.g., `fetch` or a library like `axios`).
+    * Handle loading states and errors appropriately.
+    * Type API responses.
+    * Consider using a library like `react-query` or `SWR` for data fetching, caching, and state management of server data.
+* **Forms:**
+    * Use a form library (e.g., `Formik`, `React Hook Form`) for complex forms.
+    * Validate form inputs.
+    * Handle form submission and errors.
+* **Internationalization (i18n):**
+    * Plan for internationalization early on.
+    * Use a library like `i18next` if needed.
+* **Accessibility (a11y):**
+    * Follow accessibility guidelines (WCAG).
+    * Use semantic HTML.
+    * Provide alternative text for images.
+    * Ensure keyboard navigation.
+* **Code Reviews:**
+    * Conduct regular code reviews to maintain code quality.
+    * Provide constructive feedback.
+
+**VII. Package.json Considerations**
+
+* Your `package.json` looks generally good. Here are some observations:
+    * **Dependencies:**
+        * You have a good mix of libraries. Consider if you need both `lodash` and `linq` as they have overlapping functionality.
+        * `react-router-dom` v7 is good.
+    * **Dev Dependencies:**
+        * You have a comprehensive set of dev dependencies for linting, testing, and building.
+        * `eslint-plugin-simple-import-sort` is excellent for maintaining import order.
+        * `husky` and `lint-staged` are great for pre-commit hooks to enforce code quality.
+    * **Scripts:**
+        * Your scripts are well-organized.
+        * `yarn deduplicate` is a good practice.
+        * `yarn clean` and `yarn clean:all` are useful.
+        * Keep your scripts consistent and easy to understand.
+
+**VIII. Example Refinements**
+
+* **Context Example (Enhanced):**
+
+```typescript
+// src/components/context/UserContext.tsx
+import React, { createContext, useContext, useState, ReactNode } from 'react';
+
+// 1. Define the context type
+interface UserContextType {
+  user: User | null;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
+  login: (username: string, password: string) => Promise<void>; // Example async login
+  logout: () => void;
+}
+
+interface User {
+  id: string;
+  username: string;
+  // ... other user properties
+}
+
+// 2. Create the context with a default value (can be null or a placeholder)
+const UserContext = createContext<UserContextType | undefined>(undefined);
+
+// 3. Create the provider component
+export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [user, setUser] = useState<User | null>(null);
+
+  const login = async (username: string, password: string) => {
+    // Simulate async login (e.g., API call)
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+    setUser({ id: 'some-id', username });
+  };
+
+  const logout = () => {
+    setUser(null);
+  };
+
+  const value: UserContextType = {
+    user,
+    setUser,
+    login,
+    logout,
+  };
+
+  return (
+    <UserContext.Provider value={value}>
+      {children}
+    </UserContext.Provider>
+  );
+};
+
+// 4. Create a custom hook to consume the context
+export const useUserContext = (): UserContextType => {
+  const context = useContext(UserContext);
+  if (!context) {
+    throw new Error('useUserContext must be used within a UserProvider');
+  }
+  return context;
+};
+```
+
+* **API Service Example:**
+
+```typescript
+// src/services/userService.ts
+import { User } from '../types'; // Assuming you have a User type
+
+const API_URL = '/api/users';
+
+export const getUser = async (id: string): Promise<User> => {
+  const response = await fetch(`${API_URL}/${id}`);
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  return (await response.json()) as User;
+};
+
+export const updateUser = async (id: string, userData: Partial<User>): Promise<User> => {
+  const response = await fetch(`${API_URL}/${id}`, {
+    method: 'PUT',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(userData),
+  });
+  if (!response.ok) {
+    throw new Error(`HTTP error! Status: ${response.status}`);
+  }
+  return (await response.json()) as User;
+};
+
+// ... other user-related API calls
+```
+
+**IX. Applying the Rules**
+
+1.  **Start with `tsconfig.json`:** Ensure strict mode is fully enabled.
+2.  **Linting and Formatting:** Set up ESLint, Prettier, and your editor integration to enforce consistent code style.
+3.  **Contexts:** Refactor existing context logic to adhere to the single-source-of-truth principle.
+4.  **Component Structure:** Review and refactor components to separate presentational and container logic (if needed), and extract reusable logic into hooks.
+5.  **API Calls:** Move API calls to dedicated service files.
+6.  **Types:** Define clear types for your data and components.
+7.  **Testing:** Write comprehensive tests for your components and functions.
+8.  **Code Reviews:** Implement regular code reviews to ensure adherence to the rules.
+
+By consistently applying these refined rules, you'll build a more maintainable, scalable, and robust React TypeScript application.

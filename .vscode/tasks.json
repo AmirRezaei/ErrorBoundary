@@ -1,0 +1,39 @@
+// HEADER-START
+// Path: .vscode/tasks.json
+// HEADER-END
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "dev",
+      "type": "shell",
+      "command": "yarn dev",
+      "isBackground": true,
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      },
+      "runOptions": {
+        "runOn": "folderOpen"
+      }
+    },
+    {
+      "label": "Format and Prepend Filename",
+      "type": "shell",
+      "command": "yarn format && node prepend-filename.cjs",
+      "problemMatcher": [],
+      "runOptions": {
+        "runOn": "default"
+      }
+    },
+    {
+      "label": "Format and Prepend Client Directive",
+      "type": "shell",
+      "command": "yarn node prepend-client-directive.cjs",
+      "problemMatcher": [],
+      "runOptions": {
+        "runOn": "default"
+      }
+    }
+  ]
+}
