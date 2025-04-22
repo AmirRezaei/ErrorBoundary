@@ -220,7 +220,12 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                         '& .Mui-selected': {color: '#FFFFFF !important', fontWeight: 'bold'},
                      }}>
                      <Tab label='Error' value='error' icon={<BugReportIcon fontSize='small' />} iconPosition='start' />
-                     <Tab label='Console Logs' value='logs' icon={<ListIcon fontSize='small' />} iconPosition='start' />
+                     <Tab
+                        label='Console Logs'
+                        value='console logs'
+                        icon={<ListIcon fontSize='small' />}
+                        iconPosition='start'
+                     />
                      <Tab label='Stack Trace' value='stack' icon={<CodeIcon fontSize='small' />} iconPosition='start' />
                      <Tab
                         label='Storage'
@@ -248,7 +253,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                         )}
                      </Box>
                   )}
-                  {activeTab === 'logs' && (
+                  {activeTab === 'console logs' && (
                      <Box sx={{display: 'flex', flexDirection: 'column', height: '100%'}}>
                         <Paper
                            variant='outlined'

@@ -41,7 +41,7 @@ const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, fallback, on
       hasError: false,
       error: null,
       errorInfo: null,
-      activeTab: 'error',
+      activeTab: 'console logs',
       activeLogTab: ['log'],
       logs: [],
       lastErrorTabVisit: Date.now(),
