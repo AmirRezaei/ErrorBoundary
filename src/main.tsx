@@ -1,14 +1,14 @@
 // File: ./src/main.tsx
 
 import './app/globals.css';
-import './components/utils/ErrorBoundaryComp/components/LocalStorageWrapper';
+import './components/LocalStorageWrapper';
 
 import {Box, Typography} from '@mui/material';
 import {StrictMode} from 'react';
 import {createRoot} from 'react-dom/client';
 
 import App from './App';
-import ErrorBoundary from './components/utils/ErrorBoundaryComp/components/ErrorBoundary';
+import ErrorBoundary from './components/ErrorBoundary';
 
 const rootElement = document.getElementById('root');
 

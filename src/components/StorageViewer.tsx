@@ -1,4 +1,4 @@
-// File: ./src/components/utils/ErrorBoundaryComp/components/StorageViewer.tsx
+// File: ./src/components/StorageViewer.tsx
 
 import 'react-json-view-lite/dist/index.css';
 
@@ -13,9 +13,9 @@ import {Box, Button, IconButton, Tooltip, Typography} from '@mui/material';
 import React, {useCallback, useRef, useState} from 'react';
 import {collapseAllNested, darkStyles, JsonView} from 'react-json-view-lite';
 
-import {StorageViewerProps} from '../types';
 import {useClipboard} from './context/ClipboardContext';
 import {useStorage} from './context/StorageContext';
+import {StorageViewerProps} from './types';
 
 const StorageViewer: React.FC<StorageViewerProps> = () => {
    const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set());

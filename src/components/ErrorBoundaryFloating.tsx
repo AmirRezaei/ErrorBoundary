@@ -1,19 +1,20 @@
-// File: ./src/components/utils/ErrorBoundaryComp/ErrorBoundaryFloating.tsx
+// File: ./src/components/ErrorBoundaryFloating.tsx
 
 import ErrorLogs from '@mui/icons-material/Adb';
 import BugReportIcon from '@mui/icons-material/BugReport';
 import {Fab, Toolbar, Tooltip} from '@mui/material';
-import React, {useState} from 'react';
+import React, {useRef, useState} from 'react';
 import Draggable from 'react-draggable';
 
-import {useDebugPanel} from './components/context/DebugPanelContext';
-import TestError from './components/TestError';
+import {useDebugPanel} from './context/DebugPanelContext';
+import TestError from './TestError';
 
 const ErrorBoundaryFloating: React.FC = () => {
    // const {theme} = useThemeContext();
    const {isOpen, setIsOpen} = useDebugPanel();
    const [showTestError, setShowTestError] = useState(false);
    const [showLogsPanel, setShowLogsPanel] = useState(false);
+   const draggableRef = useRef<HTMLDivElement>(null);
 
    return (
       <>
@@ -26,8 +27,8 @@ const ErrorBoundaryFloating: React.FC = () => {
                }}
             />
          )}
-         <Draggable>
-            <div style={{position: 'fixed', top: '50%', right: 0, zIndex: 1000}}>
+         <Draggable nodeRef={draggableRef as React.RefObject<HTMLElement>}>
+            <div ref={draggableRef} style={{position: 'fixed', top: '50%', right: 0, zIndex: 1000}}>
                <Toolbar variant='dense'>
                   {process.env.NODE_ENV === 'development' && (
                      <Tooltip title={showLogsPanel ? 'Hide Generate Logs and Error' : 'Show Generate Logs and Error'}>

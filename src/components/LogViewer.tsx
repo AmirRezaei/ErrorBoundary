@@ -1,4 +1,4 @@
-// File: ./src/components/utils/ErrorBoundaryComp/components/LogViewer.tsx
+// File: ./src/components/LogViewer.tsx
 
 import 'react-json-view-lite/dist/index.css';
 
@@ -8,11 +8,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {Box, Collapse, IconButton, Link, Tooltip, Typography} from '@mui/material';
 import React, {useEffect, useRef, useState} from 'react';
 
-import {StackFrame} from '../types';
-import {LogEntry} from '../types';
-import {formatTimestamp, getLogTypeBackground, getLogTypeColor} from '../utils';
 import {useClipboard} from './context/ClipboardContext';
 import {useSize} from './SizeContext';
+import {StackFrame} from './types';
+import {LogEntry} from './types';
+import {formatTimestamp, getLogTypeBackground, getLogTypeColor} from './utils';
 
 // Update LogViewerProps to use the Log type
 interface LogViewerProps {

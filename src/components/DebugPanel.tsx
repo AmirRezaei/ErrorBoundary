@@ -1,4 +1,4 @@
-// File: ./src/components/utils/ErrorBoundaryComp/components/DebugPanel.tsx
+// File: ./src/components/DebugPanel.tsx
 
 import 'react-json-view-lite/dist/index.css';
 
@@ -22,7 +22,6 @@ import {
    Box,
    Button,
    IconButton,
-   keyframes,
    Link,
    Paper,
    Tab,
@@ -37,13 +36,13 @@ import {Resizable} from 're-resizable';
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {Portal} from 'react-portal';
 
-import {DebugPanelProps, LogType} from '../types';
-import {getLogTypeColor} from '../utils';
 import {StorageProvider} from './context/StorageContext';
 import LogViewer from './LogViewer';
 import {useSize} from './SizeContext';
 import {SizeSelector} from './SizeSelector';
 import StorageViewer from './StorageViewer';
+import {DebugPanelProps, LogType} from './types';
+import {getLogTypeColor} from './utils';
 
 const getLogTypeIcon = (type: LogType) => {
    switch (type) {

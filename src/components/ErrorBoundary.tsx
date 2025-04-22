@@ -1,15 +1,15 @@
-// File: ./src/components/utils/ErrorBoundaryComp/components/ErrorBoundary.tsx
+// File: ./src/components/ErrorBoundary.tsx
 
 /* eslint-disable no-console */
 import React, {useEffect, useState} from 'react';
 
-import ErrorBoundaryFloating from '../ErrorBoundaryFloating';
-import {ErrorBoundaryProps, ErrorBoundaryState, LogEntry, LogType, StackFrame} from '../types';
-import {formatTimestamp, LOG_TYPES, parseErrorStack} from '../utils';
 import {ClipboardProvider, useClipboard} from './context/ClipboardContext';
 import {DebugPanelProvider, useDebugPanel} from './context/DebugPanelContext';
 import DebugPanel from './DebugPanel';
+import ErrorBoundaryFloating from './ErrorBoundaryFloating';
 import {SizeProvider} from './SizeContext';
+import {ErrorBoundaryProps, ErrorBoundaryState, LogEntry, LogType, StackFrame} from './types';
+import {formatTimestamp, LOG_TYPES, parseErrorStack} from './utils';
 
 const originalConsole = {
    log: console.log,

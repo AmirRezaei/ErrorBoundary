@@ -1,4 +1,4 @@
-// File: ./src/components/utils/ErrorBoundaryComp/utils.ts
+// File: ./src/components/utils.ts
 
 import {LogType, StackFrame} from './types';
 
