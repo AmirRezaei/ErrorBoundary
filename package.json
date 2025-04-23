@@ -127,7 +127,8 @@
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "audit": "yarn audit",
-    "test:ci": "jest --ci --coverage"
+    "test:ci": "jest --ci --coverage",
+    "upgrade-yarn": "corepack enable && yarn set version stable"
   },
   "browserslist": {
     "production": [
@@ -151,5 +152,6 @@
       "eslint --fix",
       "git add"
     ]
-  }
+  },
+  "packageManager": "yarn@4.9.1"
 }

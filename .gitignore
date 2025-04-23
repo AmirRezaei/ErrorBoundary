@@ -37,3 +37,5 @@ yarn-error.log*
 /dist
 package-lock.json
 yarn.lock
+# package registry and auth token
+.npmrc
