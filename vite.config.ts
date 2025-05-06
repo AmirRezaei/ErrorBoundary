@@ -1,30 +1,37 @@
-import {vitePluginErrorOverlay} from '@hiogawa/vite-plugin-error-overlay';
+import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
-import {fileURLToPath} from 'url';
-import {defineConfig} from 'vite';
-import {viteSingleFile} from 'vite-plugin-singlefile';
+import dts from 'vite-plugin-dts';
+import { resolve } from 'path';
 
 export default defineConfig({
-   base: './', // Ensure correct relative paths for static builds
-   plugins: [react(), vitePluginErrorOverlay(), viteSingleFile()],
-   server: {
-      open: process.env.NODE_ENV === 'development', // Open browser in dev mode
-      port: 3000,
-      hmr: {
-         overlay: false, // Disable Vite's error overlay
-      },
-   },
+   plugins: [
+      react(),
+      dts({
+         include: ['src/**/*'],
+         exclude: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+      }),
+   ],
    build: {
-      sourcemap: process.env.NODE_ENV === 'development', // Disable in production
+      sourcemap: true,
       outDir: 'dist',
-      assetsInlineLimit: 10 * 4096, // Default inline limit for small assets
-   },
-   define: {
-      'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
-   },
-   resolve: {
-      alias: {
-         '@': fileURLToPath(new URL('./src', import.meta.url)), // Shorten imports to `@`
+      lib: {
+         entry: resolve(__dirname, 'src/index.ts'),
+         name: 'ErrorBoundary',
+         fileName: 'index',
+         formats: ['es', 'cjs'],
       },
+      rollupOptions: {
+         external: ['react', 'react-dom', '@mui/material', '@emotion/react', '@emotion/styled'],
+         output: {
+            globals: {
+               react: 'React',
+               'react-dom': 'ReactDOM',
+               '@mui/material': 'MaterialUI',
+               '@emotion/react': 'emotionReact',
+               '@emotion/styled': 'emotionStyled',
+            },
+         },
+      },
+      minify: true,
    },
 });

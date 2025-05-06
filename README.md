@@ -1,30 +1,59 @@
-## Scripts
+# ErrorBoundary Component
 
-- **`setup`**: Installs all dependencies.
-- **`install:yarn`**: Installs Yarn globally if not already installed.
-- **`dev`**: Starts the development server on port 3000.
-- **`dev:debug`**: Starts the development server with debugging enabled.
-- **`start`**: Alias for `dev`.
-- **`build`**: Cleans the console, removes `dist`, and builds the project.
-- **`UpgradeToLatest`**: Clears the console, upgrades all dependencies to their latest versions, deduplicates the
-  lockfile, reinstalls dependencies, cleans the project, and starts the development server.
-- **`preview`**: Previews the production build.
-- **`lint`**: Runs ESLint on the project.
-- **`lint:fix`**: Runs ESLint and automatically fixes fixable issues.
-- **`format`**: Formats the project files using Prettier.
-- **`format:eslint`**: Runs ESLint with auto-fix and then formats with Prettier.
-- **`format:debug`**: Runs Prettier with debugging enabled.
-- **`clean`**: Removes the `dist` directory and Vite's cache.
-- **`clean:all`**: Removes `node_modules` and reinstalls dependencies.
-- **`clean:prettier`**: Formats files with Prettier using cache.
-- **`analyze`**: Builds the project in analyze mode.
-- **`check:types`**: Checks TypeScript types without emitting output.
-- **`prepend-header`**: Runs a Node script to prepend headers to files.
-- **`prepend-client-directive`**: Runs a Node script to prepend client directives.
-- **`deploy`**: Builds the project and copies the `dist` directory to the deployment target.
-- **`reinstall`**: Removes `node_modules` and `yarn.lock`, cleans the cache, reinstalls dependencies, and deduplicates
-  the lockfile.
-- **`deduplicate`**: Optimizes the `yarn.lock` file by removing duplicate dependencies.
-- **`test`**: Runs Jest tests.
-- **`test:watch`**: Runs Jest in watch mode.
-- **`test:coverage`**: Runs Jest and generates coverage reports.
+A React error boundary component with advanced debugging capabilities and Material-UI integration.
+
+## Installation
+
+```bash
+npm install itk-error-boundary
+# or
+yarn add itk-error-boundary
+```
+
+## Usage
+
+```tsx
+import { ErrorBoundary } from 'itk-error-boundary';
+
+function App() {
+  return (
+    <ErrorBoundary fallback={<div>Something went wrong</div>}>
+      <YourComponent />
+    </ErrorBoundary>
+  );
+}
+```
+
+## Features
+
+- Advanced error boundary with debugging capabilities
+- Material-UI integration
+- Console log capture
+- Stack trace parsing
+- Error reporting
+- Debug panel for development
+
+## Props
+
+| Prop | Type | Description |
+|------|------|-------------|
+| fallback | ReactNode | Component to render when an error occurs |
+| onError | (error: Error, errorInfo: React.ErrorInfo) => void | Callback when an error occurs |
+| defaultDebugPanelOpen | boolean | Whether the debug panel should be open by default |
+
+## Development
+
+```bash
+# Install dependencies
+yarn install
+
+# Start development server
+yarn dev
+
+# Build package
+yarn build
+```
+
+## License
+
+MIT
