@@ -34,6 +34,7 @@
     "@types/lodash": "^4.14.202",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^18.3.1",
+    "@types/react-portal": "^4.0.7",
     "@typescript-eslint/eslint-plugin": "^8.18.1",
     "@typescript-eslint/parser": "^8.18.1",
     "@vitejs/plugin-react": "^4.3.4",
@@ -46,7 +47,6 @@
     "react-dom": "^18.0.0",
     "react-draggable": "^4.4.6",
     "react-json-view-lite": "^2.4.1",
-    "react-portal": "^4.3.0",
     "rimraf": "^5.0.5",
     "typescript": "^5.7.2",
     "vite": "^6.0.2",
@@ -90,6 +90,7 @@
     "url": "https://github.com/AmirRezaei/ErrorBoundary.git"
   },
   "dependencies": {
-    "itk-error-boundary": "https://github.com/AmirRezaei/ErrorBoundary.git"
+    "itk-error-boundary": "https://github.com/AmirRezaei/ErrorBoundary.git",
+    "react-portal": "^4.3.0"
   }
 }
