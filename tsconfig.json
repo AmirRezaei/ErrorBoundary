@@ -16,10 +16,9 @@
     "noFallthroughCasesInSwitch": true,
     "declaration": true,
     "declarationDir": "./dist",
-    "emitDeclarationOnly": true,
+    "emitDeclarationOnly": false,
     "outDir": "./dist",
     "rootDir": "./src",
-    "composite": true,
     "types": ["node", "react", "react-dom"]
   },
   "include": ["src/**/*"],
