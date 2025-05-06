@@ -59,7 +59,8 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "clean": "rimraf dist",
-    "prepublishOnly": "yarn clean && yarn build"
+    "prepublishOnly": "yarn clean && yarn build",
+    "prepare": "yarn build"
   },
   "browserslist": {
     "production": [
