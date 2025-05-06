@@ -1,9 +1,9 @@
-// File: ./src/components/utils/ErrorBoundaryComp/components/SizeSelector.tsx
+// File: ./src/components/SizeSelector.tsx
 
 import {FormControl, InputLabel, MenuItem, Select, SelectChangeEvent} from '@mui/material';
 import React from 'react';
 
-import {SizeOption, useSize} from './SizeContext';
+import {SizeOption, useSize} from './SizeContext.js';
 
 export const SizeSelector: React.FC = () => {
    const {size, setSize, getSizeSettings} = useSize();

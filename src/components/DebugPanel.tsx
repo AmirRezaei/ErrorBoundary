@@ -36,13 +36,13 @@ import {Resizable} from 're-resizable';
 import React, {useCallback, useMemo, useRef, useState} from 'react';
 import {Portal} from 'react-portal';
 
-import {StorageProvider} from './context/StorageContext';
-import LogViewer from './LogViewer';
-import {useSize} from './SizeContext';
-import {SizeSelector} from './SizeSelector';
-import StorageViewer from './StorageViewer';
-import {DebugPanelProps, LogType} from './types';
-import {getLogTypeColor} from './utils';
+import {StorageProvider} from './context/StorageContext.js';
+import LogViewer from './LogViewer.js';
+import {useSize} from './SizeContext.js';
+import {SizeSelector} from './SizeSelector.js';
+import StorageViewer from './StorageViewer.js';
+import {DebugPanelProps, LogType} from './types.js';
+import {getLogTypeColor} from './utils.js';
 
 const getLogTypeIcon = (type: LogType) => {
    switch (type) {

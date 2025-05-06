@@ -8,11 +8,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {Box, Collapse, IconButton, Link, Tooltip, Typography} from '@mui/material';
 import React, {useEffect, useRef, useState} from 'react';
 
-import {useClipboard} from './context/ClipboardContext';
-import {useSize} from './SizeContext';
-import {StackFrame} from './types';
-import {LogEntry} from './types';
-import {formatTimestamp, getLogTypeBackground, getLogTypeColor} from './utils';
+import {useClipboard} from './context/ClipboardContext.js';
+import {useSize} from './SizeContext.js';
+import {StackFrame} from './types.js';
+import {LogEntry} from './types.js';
+import {formatTimestamp, getLogTypeBackground, getLogTypeColor} from './utils.js';
 
 // Update LogViewerProps to use the Log type
 interface LogViewerProps {

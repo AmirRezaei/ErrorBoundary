@@ -1,21 +1,15 @@
 // File: ./src/components/ErrorBoundary.tsx
 
 /* eslint-disable no-console */
-import React, { useEffect, useState } from 'react';
+import React, {useEffect, useState} from 'react';
 
-import { ClipboardProvider, useClipboard } from './context/ClipboardContext';
-import { DebugPanelProvider, useDebugPanel } from './context/DebugPanelContext';
-import DebugPanel from './DebugPanel';
-import ErrorBoundaryFloating from './ErrorBoundaryFloating';
-import { SizeProvider } from './SizeContext';
-import {
-   ErrorBoundaryProps,
-   ErrorBoundaryState,
-   LogEntry,
-   LogType,
-   StackFrame,
-} from './types';
-import { formatTimestamp, LOG_TYPES, parseErrorStack, parseLogMessage } from './utils';
+import {ClipboardProvider, useClipboard} from './context/ClipboardContext.js';
+import {DebugPanelProvider, useDebugPanel} from './context/DebugPanelContext.js';
+import DebugPanel from './DebugPanel.js';
+import ErrorBoundaryFloating from './ErrorBoundaryFloating.js';
+import {SizeProvider} from './SizeContext.js';
+import {ErrorBoundaryProps, ErrorBoundaryState, LogEntry, LogType, StackFrame} from './types.js';
+import {formatTimestamp, LOG_TYPES, parseErrorStack, parseLogMessage} from './utils.js';
 
 const originalConsole = {
    log: console.log,
@@ -25,24 +19,20 @@ const originalConsole = {
    debug: console.debug,
 };
 
-interface ErrorBoundaryWithDebugToolsProps extends ErrorBoundaryProps {
-   defaultDebugPanelOpen?: boolean;
-}
-
 /**
  * Base error boundary component that handles error catching and logging
  */
-const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({ children, fallback, onError }) => {
-   const { isOpen: showPanel } = useDebugPanel();
-   const { copyData: copyErrorData } = useClipboard<{
-      error: { message: string; name: string; stack: string };
+const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, fallback, onError}) => {
+   const {isOpen: showPanel} = useDebugPanel();
+   const {copyData: copyErrorData} = useClipboard<{
+      error: {message: string; name: string; stack: string};
       componentStack: string;
       timestamp: string;
-      environment: { userAgent: string; url: string; path: string };
+      environment: {userAgent: string; url: string; path: string};
       consoleLogs: LogEntry[];
    }>();
-   const { copyData: copyLogData } = useClipboard<LogEntry>();
-   const { copyData: copyStackData } = useClipboard<{ stackTrace: string; componentStack: string }>();
+   const {copyData: copyLogData} = useClipboard<LogEntry>();
+   const {copyData: copyStackData} = useClipboard<{stackTrace: string; componentStack: string}>();
    const [state, setState] = useState<ErrorBoundaryState>({
       hasError: false,
       error: null,
@@ -59,18 +49,24 @@ const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({ children, fallback, o
          return (...args: unknown[]) => {
             originalConsole[type](...args);
             const timestamp = new Date().toISOString();
-            const { mainMessage, arguments: logArgs } = parseLogMessage(
+            const {mainMessage, arguments: logArgs} = parseLogMessage(
                typeof args[0] === 'string' && args[0].includes('%') ? args[0] : undefined,
                args,
                args.join(' '),
             );
 
             setTimeout(() => {
-               setState((prevState) => ({
+               setState(prevState => ({
                   ...prevState,
                   logs: [
                      ...prevState.logs,
-                     { type, formatString: typeof args[0] === 'string' && args[0].includes('%') ? args[0] : '', args: logArgs.map(a => a.value), message: mainMessage, timestamp },
+                     {
+                        type,
+                        formatString: typeof args[0] === 'string' && args[0].includes('%') ? args[0] : '',
+                        args: logArgs.map(a => a.value),
+                        message: mainMessage,
+                        timestamp,
+                     },
                   ].slice(-200),
                }));
             }, 0);
@@ -89,7 +85,7 @@ const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({ children, fallback, o
          const errorInfo: React.ErrorInfo = {
             componentStack: event.error?.stack || '',
          };
-         setState((prevState) => ({
+         setState(prevState => ({
             ...prevState,
             hasError: true,
             error: event.error,
@@ -107,7 +103,7 @@ const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({ children, fallback, o
          const errorInfo: React.ErrorInfo = {
             componentStack: event.reason?.stack || '',
          };
-         setState((prevState) => ({
+         setState(prevState => ({
             ...prevState,
             hasError: true,
             error: event.reason,
@@ -158,7 +154,7 @@ const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({ children, fallback, o
    };
 
    const copyToClipboard = async () => {
-      const { error, errorInfo, logs } = state;
+      const {error, errorInfo, logs} = state;
       const errorDetails = {
          error: {
             message: error?.message || 'No error message available',
@@ -195,8 +191,8 @@ ${details.componentStack}
 
 Recent Console Logs:
 ${details.consoleLogs
-         .map((log) => `[${formatTimestamp(log.timestamp)}] ${log.type.toUpperCase()}: ${log.message}`)
-         .join('\n')}
+   .map(log => `[${formatTimestamp(log.timestamp)}] ${log.type.toUpperCase()}: ${log.message}`)
+   .join('\n')}
 
 Instructions for LLM:
 -------------------
@@ -211,8 +207,8 @@ Please analyze this error and provide:
    };
 
    const copyLogsByType = async (types: LogType[], format: 'text' | 'json' = 'text') => {
-      const { logs } = state;
-      const filteredLogs = logs.filter((log) => types.includes(log.type));
+      const {logs} = state;
+      const filteredLogs = logs.filter(log => types.includes(log.type));
 
       if (format === 'json') {
          await copyLogData(filteredLogs, 'json');
@@ -224,7 +220,7 @@ Please analyze this error and provide:
    };
 
    const copyStackTrace = async () => {
-      const { error, errorInfo } = state;
+      const {error, errorInfo} = state;
       const stackDetails = {
          stackTrace: error?.stack || 'No stack trace available',
          componentStack: errorInfo?.componentStack || 'No component stack available',
@@ -237,7 +233,7 @@ Please analyze this error and provide:
    };
 
    const clearLogs = () => {
-      setState((prevState) => ({
+      setState(prevState => ({
          ...prevState,
          logs: [],
       }));
@@ -256,7 +252,7 @@ Please analyze this error and provide:
                showPanel={showPanel}
                stackFrames={state.error ? parseErrorStack(state.error) : []}
                groupedLogs={LOG_TYPES.reduce(
-                  (acc, type) => ({ ...acc, [type]: state.logs.filter((log) => log.type === type) }),
+                  (acc, type) => ({...acc, [type]: state.logs.filter(log => log.type === type)}),
                   {} as Record<LogType, typeof state.logs>,
                )}
                openInEditor={openInEditor}
@@ -280,7 +276,7 @@ Please analyze this error and provide:
                   showPanel={showPanel}
                   stackFrames={[]}
                   groupedLogs={LOG_TYPES.reduce(
-                     (acc, type) => ({ ...acc, [type]: state.logs.filter((log) => log.type === type) }),
+                     (acc, type) => ({...acc, [type]: state.logs.filter(log => log.type === type)}),
                      {} as Record<LogType, typeof state.logs>,
                   )}
                   openInEditor={openInEditor}
@@ -298,17 +294,18 @@ Please analyze this error and provide:
 /**
  * Comprehensive error boundary component that includes debug tools and providers
  */
-export const ErrorBoundaryWithDebugTools: React.FC<ErrorBoundaryWithDebugToolsProps> = ({
+export const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
    children,
    fallback,
    onError,
    defaultDebugPanelOpen = false,
+   showFloatingTestButton = false,
 }) => {
    return (
       <DebugPanelProvider defaultIsOpen={defaultDebugPanelOpen}>
          <ClipboardProvider>
             <BaseErrorBoundary fallback={fallback} onError={onError}>
-               <ErrorBoundaryFloating />
+               <ErrorBoundaryFloating showFloatingTestButton={showFloatingTestButton} />
                {children}
             </BaseErrorBoundary>
          </ClipboardProvider>
@@ -316,4 +313,4 @@ export const ErrorBoundaryWithDebugTools: React.FC<ErrorBoundaryWithDebugToolsPr
    );
 };
 
-export default ErrorBoundaryWithDebugTools;
+export default ErrorBoundary;

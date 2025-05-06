@@ -1,11 +1,11 @@
 {
   "name": "itk-error-boundary",
-  "version": "0.1.0",
+  "version": "0.1.4",
   "author": "Amir Rezaei <itkompaniet@gmail.com>",
   "license": "MIT",
   "type": "module",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "main": "./dist/index.cjs.js",
+  "module": "./dist/index.es.js",
   "types": "./dist/index.d.ts",
   "files": [
     "dist"
@@ -13,8 +13,8 @@
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
-      "import": "./dist/index.js",
-      "require": "./dist/index.cjs"
+      "import": "./dist/index.es.js",
+      "require": "./dist/index.cjs.js"
     }
   },
   "sideEffects": false,
@@ -25,6 +25,9 @@
     "@mui/material": "^7.1.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0"
+  },
+  "dependencies": {
+    "react-portal": "^4.3.0"
   },
   "devDependencies": {
     "@emotion/react": "^11.14.0",
@@ -90,8 +93,5 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/AmirRezaei/ErrorBoundary.git"
-  },
-  "dependencies": {
-    "react-portal": "^4.3.0"
   }
 }

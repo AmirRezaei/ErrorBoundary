@@ -13,9 +13,9 @@ import {Box, Button, IconButton, Tooltip, Typography} from '@mui/material';
 import React, {useCallback, useRef, useState} from 'react';
 import {collapseAllNested, darkStyles, JsonView} from 'react-json-view-lite';
 
-import {useClipboard} from './context/ClipboardContext';
-import {useStorage} from './context/StorageContext';
-import {StorageViewerProps} from './types';
+import {useClipboard} from './context/ClipboardContext.js';
+import {useStorage} from './context/StorageContext.js';
+import {StorageViewerProps} from './types.js';
 
 const StorageViewer: React.FC<StorageViewerProps> = () => {
    const [expandedKeys, setExpandedKeys] = useState<Set<string>>(new Set());

@@ -1,10 +1,13 @@
 // File: ./src/components/types.ts
 
-import React, { ErrorInfo } from 'react';
+import React, {ErrorInfo} from 'react';
 
 export interface ErrorBoundaryProps {
    children: React.ReactNode;
    fallback?: React.ReactNode;
+   defaultDebugPanelOpen?: boolean;
+   showFloatingTestButton?: boolean;
+
    onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
 
@@ -39,7 +42,7 @@ export type LogType = 'log' | 'error' | 'warn' | 'info' | 'debug';
 
 export interface ParsedLogMessage {
    mainMessage: string;
-   arguments: { value: unknown; type: 'component' | 'string' | 'object' | 'number' | 'other' }[];
+   arguments: {value: unknown; type: 'component' | 'string' | 'object' | 'number' | 'other'}[];
    urls: string[];
    stackFrames: StackFrame[];
 }

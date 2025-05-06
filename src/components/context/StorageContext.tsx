@@ -1,6 +1,6 @@
-// File: ./src/components/utils/ErrorBoundaryComp/components/StorageContext.tsx
+// File: ./src/components/context/StorageContext.tsx
 
-import isEqual from 'lodash/isEqual';
+import isEqual from 'lodash/isEqual.js';
 import React, {createContext, useCallback, useContext, useEffect, useState} from 'react';
 
 interface StorageContextType {

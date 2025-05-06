@@ -6,10 +6,14 @@ import {Fab, Toolbar, Tooltip} from '@mui/material';
 import React, {useRef, useState} from 'react';
 import Draggable from 'react-draggable';
 
-import {useDebugPanel} from './context/DebugPanelContext';
-import TestError from './TestError';
+import {useDebugPanel} from './context/DebugPanelContext.js';
+import TestError from './TestError.js';
 
-const ErrorBoundaryFloating: React.FC = () => {
+interface ErrorBoundaryFloatingProps {
+   showFloatingTestButton?: boolean;
+}
+
+const ErrorBoundaryFloating: React.FC<ErrorBoundaryFloatingProps> = ({showFloatingTestButton = false}) => {
    // const {theme} = useThemeContext();
    const {isOpen, setIsOpen} = useDebugPanel();
    const [showTestError, setShowTestError] = useState(false);
@@ -30,7 +34,7 @@ const ErrorBoundaryFloating: React.FC = () => {
          <Draggable nodeRef={draggableRef as React.RefObject<HTMLElement>}>
             <div ref={draggableRef} style={{position: 'fixed', top: '50%', right: 0, zIndex: 1000}}>
                <Toolbar variant='dense'>
-                  {process.env.NODE_ENV === 'development' && (
+                  {process.env.NODE_ENV === 'development' && showFloatingTestButton && (
                      <Tooltip title={showLogsPanel ? 'Hide Generate Logs and Error' : 'Show Generate Logs and Error'}>
                         <Fab
                            color={showLogsPanel ? 'primary' : 'inherit'}

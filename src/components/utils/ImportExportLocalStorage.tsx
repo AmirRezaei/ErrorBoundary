@@ -1,8 +1,4 @@
-// HEADER-START
-// * Path: ./src/components/ImportExportLocalStorage.tsx
-// HEADER-END
-
-import React from 'react';
+// File: ./src/components/utils/ImportExportLocalStorage.tsx
 
 // Function to handle importing data into localStorage
 export const importLocalStorageDataFromJSON = (file: File) => {
@@ -28,14 +24,6 @@ export const importLocalStorageDataFromJSON = (file: File) => {
    };
 
    reader.readAsText(file);
-};
-
-// File input change handler
-const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-   const file = event.target.files?.[0];
-   if (file) {
-      importLocalStorageDataFromJSON(file);
-   }
 };
 
 // Function to export localStorage data

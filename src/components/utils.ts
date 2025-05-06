@@ -1,6 +1,6 @@
 // File: ./src/components/utils.ts
 
-import {LogType, StackFrame} from './types';
+import {LogType, StackFrame} from './types.js';
 
 export const LOG_TYPES: LogType[] = ['error', 'warn', 'log', 'info', 'debug'];
 export const TABS = ['error', 'logs', 'stack', 'env', 'storage'];

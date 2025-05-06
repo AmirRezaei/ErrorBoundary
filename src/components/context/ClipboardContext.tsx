@@ -1,4 +1,4 @@
-// File: ./src/components/utils/ErrorBoundaryComp/components/context/ClipboardContext.tsx
+// File: ./src/components/context/ClipboardContext.tsx
 
 import {createContext, JSX, ReactNode, useContext} from 'react';
 
