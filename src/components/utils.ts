@@ -126,12 +126,10 @@ export const formatTimestamp = (timestamp: string) => {
       hour: '2-digit',
       minute: '2-digit',
       second: '2-digit',
-      fractionalSecondDigits: 3,
    });
 };
 
-// Helper function to determine argument type
-const getArgType = (arg: unknown): 'component' | 'string' | 'object' | 'number' | 'other' => {
+export const getArgType = (arg: unknown): 'component' | 'string' | 'object' | 'number' | 'other' => {
    if (typeof arg === 'string' && /^[A-Z][a-zA-Z0-9]*$/.test(arg)) {
       return 'component';
    }

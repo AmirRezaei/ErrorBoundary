@@ -9,18 +9,19 @@
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "noEmit": true,
     "jsx": "react-jsx",
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "types": ["node", "react", "react-dom"],
-    "baseUrl": ".",
-    "paths": {
-      "itk-error-boundary": ["./node_modules/itk-error-boundary/dist/index.d.ts"]
-    }
+    "declaration": true,
+    "declarationDir": "./dist",
+    "emitDeclarationOnly": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "composite": true,
+    "types": ["node", "react", "react-dom"]
   },
-  "include": ["src"],
-  "references": [{"path": "./tsconfig.node.json"}]
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "**/*.test.ts", "**/*.test.tsx"]
 }
