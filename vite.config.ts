@@ -61,7 +61,9 @@ export default defineConfig({
    },
    resolve: {
       alias: {
-         'itk-error-boundary': resolve(__dirname, 'node_modules/itk-error-boundary/dist/index.js')
+         // Removed this alias as it's referencing the built output which is not the intended use during development.
+         // When consuming the package, Node.js module resolution will handle it.
+         // 'itk-error-boundary': resolve(__dirname, 'node_modules/itk-error-boundary/dist/index.js')
       }
    }
 });

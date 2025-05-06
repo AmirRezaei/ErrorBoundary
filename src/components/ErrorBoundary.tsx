@@ -1,15 +1,21 @@
 // File: ./src/components/ErrorBoundary.tsx
 
 /* eslint-disable no-console */
-import React, {useEffect, useState} from 'react';
+import React, { useEffect, useState } from 'react';
 
-import {ClipboardProvider, useClipboard} from './context/ClipboardContext';
-import {DebugPanelProvider, useDebugPanel} from './context/DebugPanelContext';
+import { ClipboardProvider, useClipboard } from './context/ClipboardContext';
+import { DebugPanelProvider, useDebugPanel } from './context/DebugPanelContext';
 import DebugPanel from './DebugPanel';
 import ErrorBoundaryFloating from './ErrorBoundaryFloating';
-import {SizeProvider} from './SizeContext';
-import {ErrorBoundaryProps, ErrorBoundaryState, LogEntry, LogType, StackFrame} from './types';
-import {formatTimestamp, LOG_TYPES, parseErrorStack} from './utils';
+import { SizeProvider } from './SizeContext';
+import {
+   ErrorBoundaryProps,
+   ErrorBoundaryState,
+   LogEntry,
+   LogType,
+   StackFrame,
+} from './types';
+import { formatTimestamp, LOG_TYPES, parseErrorStack, parseLogMessage } from './utils';
 
 const originalConsole = {
    log: console.log,
@@ -26,17 +32,17 @@ interface ErrorBoundaryWithDebugToolsProps extends ErrorBoundaryProps {
 /**
  * Base error boundary component that handles error catching and logging
  */
-const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, fallback, onError}) => {
-   const {isOpen: showPanel} = useDebugPanel();
-   const {copyData: copyErrorData} = useClipboard<{
-      error: {message: string; name: string; stack: string};
+const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({ children, fallback, onError }) => {
+   const { isOpen: showPanel } = useDebugPanel();
+   const { copyData: copyErrorData } = useClipboard<{
+      error: { message: string; name: string; stack: string };
       componentStack: string;
       timestamp: string;
-      environment: {userAgent: string; url: string; path: string};
+      environment: { userAgent: string; url: string; path: string };
       consoleLogs: LogEntry[];
    }>();
-   const {copyData: copyLogData} = useClipboard<LogEntry>();
-   const {copyData: copyStackData} = useClipboard<{stackTrace: string; componentStack: string}>();
+   const { copyData: copyLogData } = useClipboard<LogEntry>();
+   const { copyData: copyStackData } = useClipboard<{ stackTrace: string; componentStack: string }>();
    const [state, setState] = useState<ErrorBoundaryState>({
       hasError: false,
       error: null,
@@ -52,28 +58,19 @@ const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, fallback, on
       const createConsoleMethod = (type: LogType) => {
          return (...args: unknown[]) => {
             originalConsole[type](...args);
-            let formatString = '';
-            let message: string;
-            const logArgs = args.map(arg => {
-               if (typeof arg === 'object' && arg !== null) {
-                  return arg;
-               }
-               return String(arg);
-            });
-
-            if (typeof args[0] === 'string' && args[0].includes('%')) {
-               formatString = args[0];
-               message = formatConsoleMessage(formatString, args.slice(1));
-            } else {
-               message = logArgs.join(' ');
-            }
+            const timestamp = new Date().toISOString();
+            const { mainMessage, arguments: logArgs } = parseLogMessage(
+               typeof args[0] === 'string' && args[0].includes('%') ? args[0] : undefined,
+               args,
+               args.join(' '),
+            );
 
             setTimeout(() => {
-               setState(prevState => ({
+               setState((prevState) => ({
                   ...prevState,
                   logs: [
                      ...prevState.logs,
-                     {type, formatString, args: logArgs, message, timestamp: new Date().toISOString()},
+                     { type, formatString: typeof args[0] === 'string' && args[0].includes('%') ? args[0] : '', args: logArgs.map(a => a.value), message: mainMessage, timestamp },
                   ].slice(-200),
                }));
             }, 0);
@@ -92,7 +89,7 @@ const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, fallback, on
          const errorInfo: React.ErrorInfo = {
             componentStack: event.error?.stack || '',
          };
-         setState(prevState => ({
+         setState((prevState) => ({
             ...prevState,
             hasError: true,
             error: event.error,
@@ -110,7 +107,7 @@ const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, fallback, on
          const errorInfo: React.ErrorInfo = {
             componentStack: event.reason?.stack || '',
          };
-         setState(prevState => ({
+         setState((prevState) => ({
             ...prevState,
             hasError: true,
             error: event.reason,
@@ -139,21 +136,6 @@ const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, fallback, on
       };
    }, [onError]);
 
-   const formatConsoleMessage = (formatString: string, args: unknown[]): string => {
-      let index = 0;
-      return formatString.replace(/%[sdfoO]/g, () => {
-         const arg = args[index++] ?? 'undefined';
-         if (typeof arg === 'object' && arg !== null) {
-            try {
-               return JSON.stringify(arg, null, 2);
-            } catch {
-               return String(arg);
-            }
-         }
-         return String(arg);
-      });
-   };
-
    const openInEditor = async (frame: StackFrame) => {
       try {
          let filePath = frame.file;
@@ -176,7 +158,7 @@ const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, fallback, on
    };
 
    const copyToClipboard = async () => {
-      const {error, errorInfo, logs} = state;
+      const { error, errorInfo, logs } = state;
       const errorDetails = {
          error: {
             message: error?.message || 'No error message available',
@@ -213,8 +195,8 @@ ${details.componentStack}
 
 Recent Console Logs:
 ${details.consoleLogs
-   .map(log => `[${formatTimestamp(log.timestamp)}] ${log.type.toUpperCase()}: ${log.message}`)
-   .join('\n')}
+         .map((log) => `[${formatTimestamp(log.timestamp)}] ${log.type.toUpperCase()}: ${log.message}`)
+         .join('\n')}
 
 Instructions for LLM:
 -------------------
@@ -229,8 +211,8 @@ Please analyze this error and provide:
    };
 
    const copyLogsByType = async (types: LogType[], format: 'text' | 'json' = 'text') => {
-      const {logs} = state;
-      const filteredLogs = logs.filter(log => types.includes(log.type));
+      const { logs } = state;
+      const filteredLogs = logs.filter((log) => types.includes(log.type));
 
       if (format === 'json') {
          await copyLogData(filteredLogs, 'json');
@@ -242,7 +224,7 @@ Please analyze this error and provide:
    };
 
    const copyStackTrace = async () => {
-      const {error, errorInfo} = state;
+      const { error, errorInfo } = state;
       const stackDetails = {
          stackTrace: error?.stack || 'No stack trace available',
          componentStack: errorInfo?.componentStack || 'No component stack available',
@@ -255,7 +237,7 @@ Please analyze this error and provide:
    };
 
    const clearLogs = () => {
-      setState(prevState => ({
+      setState((prevState) => ({
          ...prevState,
          logs: [],
       }));
@@ -274,7 +256,7 @@ Please analyze this error and provide:
                showPanel={showPanel}
                stackFrames={state.error ? parseErrorStack(state.error) : []}
                groupedLogs={LOG_TYPES.reduce(
-                  (acc, type) => ({...acc, [type]: state.logs.filter(log => log.type === type)}),
+                  (acc, type) => ({ ...acc, [type]: state.logs.filter((log) => log.type === type) }),
                   {} as Record<LogType, typeof state.logs>,
                )}
                openInEditor={openInEditor}
@@ -298,7 +280,7 @@ Please analyze this error and provide:
                   showPanel={showPanel}
                   stackFrames={[]}
                   groupedLogs={LOG_TYPES.reduce(
-                     (acc, type) => ({...acc, [type]: state.logs.filter(log => log.type === type)}),
+                     (acc, type) => ({ ...acc, [type]: state.logs.filter((log) => log.type === type) }),
                      {} as Record<LogType, typeof state.logs>,
                   )}
                   openInEditor={openInEditor}

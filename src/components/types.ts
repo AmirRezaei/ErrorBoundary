@@ -1,6 +1,6 @@
-// File: ./src/components/utils/ErrorBoundaryComp/types.ts
+// File: ./src/components/types.ts
 
-import React, {ErrorInfo} from 'react';
+import React, { ErrorInfo } from 'react';
 
 export interface ErrorBoundaryProps {
    children: React.ReactNode;
@@ -19,7 +19,6 @@ export interface ErrorBoundaryState {
    newErrorCount: number;
 }
 
-// Define Log type inline based on the provided error object
 export interface LogEntry {
    type: LogType;
    formatString: string;
@@ -40,7 +39,7 @@ export type LogType = 'log' | 'error' | 'warn' | 'info' | 'debug';
 
 export interface ParsedLogMessage {
    mainMessage: string;
-   arguments: {value: unknown; type: 'component' | 'string' | 'object' | 'number' | 'other'}[];
+   arguments: { value: unknown; type: 'component' | 'string' | 'object' | 'number' | 'other' }[];
    urls: string[];
    stackFrames: StackFrame[];
 }
