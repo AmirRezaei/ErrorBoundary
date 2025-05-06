@@ -9,6 +9,10 @@ export default defineConfig({
       dts({
          include: ['src/**/*'],
          exclude: ['src/**/*.test.ts', 'src/**/*.test.tsx'],
+         rollupTypes: true,
+         outDir: 'dist',
+         staticImport: true,
+         insertTypesEntry: true,
       }),
    ],
    build: {
@@ -17,21 +21,47 @@ export default defineConfig({
       lib: {
          entry: resolve(__dirname, 'src/index.ts'),
          name: 'ErrorBoundary',
-         fileName: 'index',
+         fileName: (format) => `index.${format === 'es' ? 'js' : 'cjs'}`,
          formats: ['es', 'cjs'],
       },
       rollupOptions: {
-         external: ['react', 'react-dom', '@mui/material', '@emotion/react', '@emotion/styled'],
+         external: [
+            'react',
+            'react-dom',
+            'react/jsx-runtime',
+            '@mui/material',
+            '@mui/icons-material',
+            '@emotion/react',
+            '@emotion/styled',
+            'lodash',
+            're-resizable',
+            'react-draggable',
+            'react-json-view-lite',
+            'react-portal'
+         ],
          output: {
             globals: {
                react: 'React',
                'react-dom': 'ReactDOM',
+               'react/jsx-runtime': 'jsxRuntime',
                '@mui/material': 'MaterialUI',
+               '@mui/icons-material': 'MaterialIcons',
                '@emotion/react': 'emotionReact',
                '@emotion/styled': 'emotionStyled',
+               'lodash': 'lodash',
+               're-resizable': 'ReResizable',
+               'react-draggable': 'ReactDraggable',
+               'react-json-view-lite': 'ReactJsonViewLite',
+               'react-portal': 'ReactPortal'
             },
+            exports: 'named',
          },
       },
       minify: true,
    },
+   resolve: {
+      alias: {
+         'itk-error-boundary': resolve(__dirname, 'node_modules/itk-error-boundary/dist/index.js')
+      }
+   }
 });

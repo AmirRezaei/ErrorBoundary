@@ -15,10 +15,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "declaration": true,
-    "declarationDir": "./dist",
-    "emitDeclarationOnly": true,
-    "types": ["node", "react", "react-dom"]
+    "types": ["node", "react", "react-dom"],
+    "baseUrl": ".",
+    "paths": {
+      "itk-error-boundary": ["./node_modules/itk-error-boundary/dist/index.d.ts"]
+    }
   },
   "include": ["src"],
   "references": [{"path": "./tsconfig.node.json"}]
