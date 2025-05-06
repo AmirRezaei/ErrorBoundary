@@ -71,5 +71,12 @@
       "git add"
     ]
   },
-  "packageManager": "yarn@4.9.1"
+  "packageManager": "yarn@4.9.1",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AmirRezaei/ErrorBoundary.git"
+  },
+  "dependencies": {
+    "itk-error-boundary": "https://github.com/AmirRezaei/ErrorBoundary.git"
+  }
 }

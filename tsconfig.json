@@ -17,7 +17,8 @@
     "noFallthroughCasesInSwitch": true,
     "declaration": true,
     "declarationDir": "./dist",
-    "emitDeclarationOnly": true
+    "emitDeclarationOnly": true,
+    "types": ["node", "react", "react-dom"]
   },
   "include": ["src"],
   "references": [{"path": "./tsconfig.node.json"}]
