@@ -8,7 +8,7 @@ import {ErrorBoundary} from './components/ErrorBoundary.js';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
    <React.StrictMode>
-      <ErrorBoundary>
+      <ErrorBoundary logLimit={100}>
          <Box>
             <Typography variant='h1'>Hello World</Typography>
          </Box>

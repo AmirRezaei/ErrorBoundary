@@ -43,6 +43,7 @@ import {SizeSelector} from './SizeSelector.js';
 import StorageViewer from './StorageViewer.js';
 import {DebugPanelProps, LogType} from './types.js';
 import {getLogTypeColor} from './utils.js';
+import {useSettings} from './context/SettingsContext.js';
 
 const getLogTypeIcon = (type: LogType) => {
    switch (type) {
@@ -78,6 +79,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
    const [currentSearchIndex, setCurrentSearchIndex] = useState<number>(-1);
    const searchResultsRef = useRef<HTMLDivElement[]>([]);
    const {getSizeSettings} = useSize();
+   const {settings, updateSettings} = useSettings();
    const sizeSettings = getSizeSettings();
 
    React.useEffect(() => {
@@ -148,26 +150,31 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
             lastErrorTabVisit: newValue === 'error' ? Date.now() : prevState.lastErrorTabVisit,
             newErrorCount: newValue === 'error' ? 0 : prevState.newErrorCount,
          }));
+         updateSettings('errorBoundary', {activeTab: newValue});
       },
-      [setState],
+      [setState, updateSettings],
    );
 
    const handleLogTypeChange = useCallback(
       (_: React.MouseEvent<HTMLElement>, newLogTypes: LogType[]) => {
          if (newLogTypes.length > 0) {
             setState(prevState => ({...prevState, activeLogTab: newLogTypes}));
+            updateSettings('errorBoundary', {activeLogTabs: newLogTypes});
          }
       },
-      [setState],
+      [setState, updateSettings],
    );
 
    return (
       <Portal>
          <Resizable
-            defaultSize={{height: 300, width: '100vw'}}
+            defaultSize={{height: settings.debugPanel.height, width: '100vw'}}
             minHeight={100}
             maxHeight='80vh'
             enable={{top: true, right: false, bottom: false, left: false}}
+            onResizeStop={(e, direction, ref, d) => {
+               updateSettings('debugPanel', {height: settings.debugPanel.height + d.height});
+            }}
             handleStyles={{
                top: {
                   background: '#424242',
@@ -310,7 +317,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                               </Tooltip>
                               <ToggleButtonGroup
                                  size='small'
-                                 value={activeLogTab}
+                                 value={settings.errorBoundary.activeLogTabs}
                                  onChange={handleLogTypeChange}
                                  aria-label='log type filter'
                                  sx={{
@@ -329,7 +336,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                                  }}>
                                  {['log', 'error', 'warn', 'info', 'debug'].map(type => {
                                     const logType = type as LogType;
-                                    const isSelected = activeLogTab.includes(logType);
+                                    const isSelected = settings.errorBoundary.activeLogTabs.includes(logType);
                                     const color = getLogTypeColor(logType);
                                     return (
                                        <ToggleButton

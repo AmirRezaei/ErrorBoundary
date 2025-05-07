@@ -1,7 +1,7 @@
 // File: ./src/components/ErrorBoundary.tsx
 
 /* eslint-disable no-console */
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useState, useCallback} from 'react';
 
 import {ClipboardProvider, useClipboard} from './context/ClipboardContext.js';
 import {DebugPanelProvider, useDebugPanel} from './context/DebugPanelContext.js';
@@ -10,6 +10,7 @@ import ErrorBoundaryFloating from './ErrorBoundaryFloating.js';
 import {SizeProvider} from './SizeContext.js';
 import {ErrorBoundaryProps, ErrorBoundaryState, LogEntry, LogType, StackFrame} from './types.js';
 import {formatTimestamp, LOG_TYPES, parseErrorStack, parseLogMessage} from './utils.js';
+import {SettingsProvider, useSettings} from './context/SettingsContext.js';
 
 const originalConsole = {
    log: console.log,
@@ -33,16 +34,26 @@ const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, fallback, on
    }>();
    const {copyData: copyLogData} = useClipboard<LogEntry>();
    const {copyData: copyStackData} = useClipboard<{stackTrace: string; componentStack: string}>();
-   const [state, setState] = useState<ErrorBoundaryState>({
+   const {settings, updateSettings} = useSettings();
+   const [state, setState] = useState<ErrorBoundaryState>(() => ({
       hasError: false,
       error: null,
       errorInfo: null,
-      activeTab: 'console logs',
-      activeLogTab: ['log'],
+      activeTab: settings.errorBoundary.activeTab,
+      activeLogTab: settings.errorBoundary.activeLogTabs as LogType[],
       logs: [],
       lastErrorTabVisit: Date.now(),
       newErrorCount: 0,
-   });
+   }));
+
+   // Update state when settings change
+   useEffect(() => {
+      setState(prev => ({
+         ...prev,
+         activeTab: settings.errorBoundary.activeTab,
+         activeLogTab: settings.errorBoundary.activeLogTabs as LogType[],
+      }));
+   }, [settings.errorBoundary.activeTab, settings.errorBoundary.activeLogTabs]);
 
    // Add effect to log state changes for debugging
    useEffect(() => {
@@ -244,6 +255,29 @@ Please analyze this error and provide:
       }));
    };
 
+   const handleTabChange = useCallback(
+      (_: React.SyntheticEvent, newValue: string) => {
+         setState(prevState => ({
+            ...prevState,
+            activeTab: newValue,
+            lastErrorTabVisit: newValue === 'error' ? Date.now() : prevState.lastErrorTabVisit,
+            newErrorCount: newValue === 'error' ? 0 : prevState.newErrorCount,
+         }));
+         updateSettings('errorBoundary', {activeTab: newValue});
+      },
+      [setState, updateSettings],
+   );
+
+   const handleLogTypeChange = useCallback(
+      (_: React.MouseEvent<HTMLElement>, newLogTypes: LogType[]) => {
+         if (newLogTypes.length > 0) {
+            setState(prevState => ({...prevState, activeLogTab: newLogTypes}));
+            updateSettings('errorBoundary', {activeLogTabs: newLogTypes});
+         }
+      },
+      [setState, updateSettings],
+   );
+
    if (state.hasError) {
       if (fallback) {
          return <>{fallback}</>;
@@ -306,14 +340,16 @@ export const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
    logLimit = 200,
 }) => {
    return (
-      <DebugPanelProvider defaultIsOpen={defaultDebugPanelOpen}>
-         <ClipboardProvider>
-            <BaseErrorBoundary fallback={fallback} onError={onError} logLimit={logLimit}>
-               <ErrorBoundaryFloating showTestTooltip={showTestTooltip} />
-               {children}
-            </BaseErrorBoundary>
-         </ClipboardProvider>
-      </DebugPanelProvider>
+      <SettingsProvider>
+         <DebugPanelProvider defaultIsOpen={defaultDebugPanelOpen}>
+            <ClipboardProvider>
+               <BaseErrorBoundary fallback={fallback} onError={onError} logLimit={logLimit}>
+                  <ErrorBoundaryFloating showTestTooltip={showTestTooltip} />
+                  {children}
+               </BaseErrorBoundary>
+            </ClipboardProvider>
+         </DebugPanelProvider>
+      </SettingsProvider>
    );
 };
 

@@ -1,6 +1,6 @@
 {
   "name": "itk-error-boundary",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "author": "Amir Rezaei <itkompaniet@gmail.com>",
   "license": "MIT",
   "type": "module",
@@ -58,7 +58,8 @@
   },
   "scripts": {
     "build": "rimraf dist && vite build",
-    "dev": "vite build --watch",
+    "dev": "vite",
+    "build:watch": "vite build --watch",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",

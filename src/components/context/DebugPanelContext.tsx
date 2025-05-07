@@ -16,18 +16,18 @@ interface DebugPanelProviderProps {
 
 export const DebugPanelProvider: React.FC<DebugPanelProviderProps> = ({children, defaultIsOpen}) => {
    const [isOpen, setIsOpen] = React.useState(() => {
-      console.log('Initializing DebugPanel with defaultIsOpen:', defaultIsOpen);
+      // console.log('Initializing DebugPanel with defaultIsOpen:', defaultIsOpen);
       return defaultIsOpen;
    });
 
    const handleSetIsOpen = React.useCallback((value: boolean) => {
-      console.log('Setting DebugPanel state to:', value);
+      // console.log('Setting DebugPanel state to:', value);
       setIsOpen(value);
    }, []);
 
    // Effect to ensure the panel is visible on mount if defaultIsOpen is true
    React.useEffect(() => {
-      console.log('DebugPanel mount effect, defaultIsOpen:', defaultIsOpen);
+      // console.log('DebugPanel mount effect, defaultIsOpen:', defaultIsOpen);
       if (defaultIsOpen) {
          setIsOpen(true);
       }
@@ -35,7 +35,7 @@ export const DebugPanelProvider: React.FC<DebugPanelProviderProps> = ({children,
 
    // Log state changes
    React.useEffect(() => {
-      console.log('DebugPanel state changed to:', isOpen);
+      // console.log('DebugPanel state changed to:', isOpen);
    }, [isOpen]);
 
    return (

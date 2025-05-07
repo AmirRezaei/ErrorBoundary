@@ -57,3 +57,15 @@ yarn build
 ## License
 
 MIT
+
+## Keywords
+
+- React
+- Error Boundary
+- Debugging
+- TypeScript
+- Console Logging
+- Stack Traces
+- Development Tools
+- Error Reporting
+- Browser Storage Monitoring
