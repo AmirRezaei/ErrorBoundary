@@ -1,4 +1,4 @@
-// File: ./src/components/utils/ErrorBoundaryComp/components/DebugPanelContext.tsx
+// File: ./src/components/context/DebugPanelContext.tsx
 
 import React, {createContext, ReactNode, useContext} from 'react';
 
@@ -11,13 +11,36 @@ const DebugPanelContext = createContext<DebugPanelContextType | undefined>(undef
 
 interface DebugPanelProviderProps {
    children: ReactNode;
-   defaultIsOpen?: boolean;
+   defaultIsOpen: boolean;
 }
 
-export const DebugPanelProvider: React.FC<DebugPanelProviderProps> = ({children, defaultIsOpen = false}) => {
-   const [isOpen, setIsOpen] = React.useState(defaultIsOpen);
+export const DebugPanelProvider: React.FC<DebugPanelProviderProps> = ({children, defaultIsOpen}) => {
+   const [isOpen, setIsOpen] = React.useState(() => {
+      console.log('Initializing DebugPanel with defaultIsOpen:', defaultIsOpen);
+      return defaultIsOpen;
+   });
 
-   return <DebugPanelContext.Provider value={{isOpen, setIsOpen}}>{children}</DebugPanelContext.Provider>;
+   const handleSetIsOpen = React.useCallback((value: boolean) => {
+      console.log('Setting DebugPanel state to:', value);
+      setIsOpen(value);
+   }, []);
+
+   // Effect to ensure the panel is visible on mount if defaultIsOpen is true
+   React.useEffect(() => {
+      console.log('DebugPanel mount effect, defaultIsOpen:', defaultIsOpen);
+      if (defaultIsOpen) {
+         setIsOpen(true);
+      }
+   }, [defaultIsOpen]);
+
+   // Log state changes
+   React.useEffect(() => {
+      console.log('DebugPanel state changed to:', isOpen);
+   }, [isOpen]);
+
+   return (
+      <DebugPanelContext.Provider value={{isOpen, setIsOpen: handleSetIsOpen}}>{children}</DebugPanelContext.Provider>
+   );
 };
 
 export const useDebugPanel = (): DebugPanelContextType => {

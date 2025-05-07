@@ -70,6 +70,7 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
    copyLogsByType,
    copyStackTrace,
    clearLogs,
+   showPanel,
 }) => {
    const {hasError, error, activeTab, activeLogTab = ['log']} = state;
    const [searchTerm, setSearchTerm] = useState<string>('');
@@ -78,6 +79,10 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
    const searchResultsRef = useRef<HTMLDivElement[]>([]);
    const {getSizeSettings} = useSize();
    const sizeSettings = getSizeSettings();
+
+   React.useEffect(() => {
+      console.log('DebugPanel visibility changed:', showPanel);
+   }, [showPanel]);
 
    const toggleAutoScroll = () => {
       setAutoScroll(prev => !prev);
@@ -177,6 +182,10 @@ const DebugPanel: React.FC<DebugPanelProps> = ({
                left: 0,
                width: '100vw',
                zIndex: 1300,
+               display: showPanel ? 'block' : 'none',
+               visibility: showPanel ? 'visible' : 'hidden',
+               opacity: showPanel ? 1 : 0,
+               transition: 'opacity 0.2s ease-in-out',
             }}>
             <Paper
                elevation={6}

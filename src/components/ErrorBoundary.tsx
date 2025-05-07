@@ -22,7 +22,7 @@ const originalConsole = {
 /**
  * Base error boundary component that handles error catching and logging
  */
-const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, fallback, onError}) => {
+const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, fallback, onError, logLimit = 200}) => {
    const {isOpen: showPanel} = useDebugPanel();
    const {copyData: copyErrorData} = useClipboard<{
       error: {message: string; name: string; stack: string};
@@ -43,6 +43,11 @@ const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, fallback, on
       lastErrorTabVisit: Date.now(),
       newErrorCount: 0,
    });
+
+   // Add effect to log state changes for debugging
+   useEffect(() => {
+      console.log('Debug Panel State:', {showPanel, isOpen: showPanel});
+   }, [showPanel]);
 
    useEffect(() => {
       const createConsoleMethod = (type: LogType) => {
@@ -67,7 +72,7 @@ const BaseErrorBoundary: React.FC<ErrorBoundaryProps> = ({children, fallback, on
                         message: mainMessage,
                         timestamp,
                      },
-                  ].slice(-200),
+                  ].slice(-logLimit),
                }));
             }, 0);
          };
@@ -268,25 +273,23 @@ Please analyze this error and provide:
    return (
       <>
          {children}
-         {showPanel && (
-            <SizeProvider>
-               <DebugPanel
-                  state={state}
-                  setState={setState}
-                  showPanel={showPanel}
-                  stackFrames={[]}
-                  groupedLogs={LOG_TYPES.reduce(
-                     (acc, type) => ({...acc, [type]: state.logs.filter(log => log.type === type)}),
-                     {} as Record<LogType, typeof state.logs>,
-                  )}
-                  openInEditor={openInEditor}
-                  copyToClipboard={copyToClipboard}
-                  copyLogsByType={copyLogsByType}
-                  copyStackTrace={copyStackTrace}
-                  clearLogs={clearLogs}
-               />
-            </SizeProvider>
-         )}
+         <SizeProvider>
+            <DebugPanel
+               state={state}
+               setState={setState}
+               showPanel={showPanel}
+               stackFrames={state.error ? parseErrorStack(state.error) : []}
+               groupedLogs={LOG_TYPES.reduce(
+                  (acc, type) => ({...acc, [type]: state.logs.filter(log => log.type === type)}),
+                  {} as Record<LogType, typeof state.logs>,
+               )}
+               openInEditor={openInEditor}
+               copyToClipboard={copyToClipboard}
+               copyLogsByType={copyLogsByType}
+               copyStackTrace={copyStackTrace}
+               clearLogs={clearLogs}
+            />
+         </SizeProvider>
       </>
    );
 };
@@ -298,14 +301,15 @@ export const ErrorBoundary: React.FC<ErrorBoundaryProps> = ({
    children,
    fallback,
    onError,
-   defaultDebugPanelOpen = false,
-   showFloatingTestButton = false,
+   defaultDebugPanelOpen = true,
+   showTestTooltip = false,
+   logLimit = 200,
 }) => {
    return (
       <DebugPanelProvider defaultIsOpen={defaultDebugPanelOpen}>
          <ClipboardProvider>
-            <BaseErrorBoundary fallback={fallback} onError={onError}>
-               <ErrorBoundaryFloating showFloatingTestButton={showFloatingTestButton} />
+            <BaseErrorBoundary fallback={fallback} onError={onError} logLimit={logLimit}>
+               <ErrorBoundaryFloating showTestTooltip={showTestTooltip} />
                {children}
             </BaseErrorBoundary>
          </ClipboardProvider>

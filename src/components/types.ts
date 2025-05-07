@@ -6,8 +6,8 @@ export interface ErrorBoundaryProps {
    children: React.ReactNode;
    fallback?: React.ReactNode;
    defaultDebugPanelOpen?: boolean;
-   showFloatingTestButton?: boolean;
-
+   showTestTooltip?: boolean;
+   logLimit: number;
    onError?: (error: Error, errorInfo: React.ErrorInfo) => void;
 }
 
