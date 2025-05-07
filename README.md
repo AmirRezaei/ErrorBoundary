@@ -17,7 +17,7 @@ import { ErrorBoundary } from 'itk-error-boundary';
 
 function App() {
   return (
-    <ErrorBoundary fallback={<div>Something went wrong</div>}>
+    <ErrorBoundary fallback={<div>Something went wrong</div>} logLimit={100}>
       <YourComponent />
     </ErrorBoundary>
   );
